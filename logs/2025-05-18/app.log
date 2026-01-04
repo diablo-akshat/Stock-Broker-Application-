@@ -1,0 +1,34 @@
+[I 250518 12:23:34 smartConnect:121] in pool
+[I 250518 12:25:17 smartConnect:121] in pool
+[I 250518 12:26:30 smartConnect:121] in pool
+[E 250518 14:49:48 main:45] Connection closed
+[E 250518 14:49:48 main:45] Connection closed
+[E 250518 14:49:48 main:45] Connection closed
+[E 250518 14:50:06 smartConnect:243] Error occurred while making a POST request to https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword. Error: Invalid Token. URL: https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': 'b4:8c:9d:52:b7:da', 'Accept': 'application/json', 'X-PrivateKey': None, 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'clientcode': 'G52021525', 'password': '3494', 'totp': '582621'}, Response: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[I 250518 14:50:28 smartConnect:121] in pool
+[I 250518 15:14:48 smartConnect:121] in pool
+[I 250518 15:18:26 smartConnect:121] in pool
+[I 250518 15:40:12 smartConnect:121] in pool
+[I 250518 15:50:17 smartConnect:121] in pool
+[I 250518 16:18:12 smartConnect:121] in pool
+[I 250518 16:20:07 smartConnect:121] in pool
+[I 250518 16:20:47 smartConnect:121] in pool
+[I 250518 17:17:46 smartConnect:121] in pool
+[I 250518 17:28:21 smartConnect:121] in pool
+[E 250518 17:28:21 smartConnect:243] Error occurred while making a GET request to https://apiconnect.angelbroking.com/rest/secure/angelbroking/user/v1/getProfile. Error: Invalid Token. URL: https://apiconnect.angelbroking.com/rest/secure/angelbroking/user/v1/getProfile, Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': 'b4:8c:9d:52:b7:da', 'Accept': 'application/json', 'X-PrivateKey': 'gVTQXkoG', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'refreshToken': 'eyJhbGciOiJIUzUxMiJ9.eyJ0b2tlbiI6IlJFRlJFU0gtVE9LRU4iLCJSRUZSRVNILVRPS0VOIjoiZXlKaGJHY2lPaUpTVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SjFjMlZ5WDNSNWNHVWlPaUpqYkdsbGJuUWlMQ0owYjJ0bGJsOTBlWEJsSWpvaWRISmhaR1ZmY21WbWNtVnphRjkwYjJ0bGJpSXNJbWR0WDJsa0lqb3dMQ0p6YjNWeVkyVWlPaUl6SWl3aVpHVjJhV05sWDJsa0lqb2lOVEl3TldZMFpUSXRaR00wTUMwelkySmlMV0kxT0RNdE5qSmpZbUl3TURabE1qYzBJaXdpYTJsa0lqb2lkSEpoWkdWZmEyVjVYM1l5SWl3aWIyMXVaVzFoYm1GblpYSnBaQ0k2TUN3aWFYTnpJam9pYkc5bmFXNWZjMlZ5ZG1salpTSXNJbk4xWWlJNklrYzFNakF5TVRVeU5TSXNJbVY0Y0NJNk1UYzBOelkxTlRnNU9Td2libUptSWpveE56UTNOVFk1TXpFNUxDSnBZWFFpT2pFM05EYzFOamt6TVRrc0ltcDBhU0k2SWpGbU5EQXlPVE5rTFRNM05EUXROR1ptWWkwNFlqRmpMV0ptWlROaE1UYzNNREl5WWlJc0lsUnZhMlZ1SWpvaUluMC5JYVJETHBZUzNodnA2S0ttUTQ0WFJ4cFpOT1J0dmR4SmFPWkw2QTNsU21zQktOVm0xOF9TWXRsYnhIdGxoUVFwNWE0a25iQjBzNFZlSy1HYm11UGQ2X25nR2tzTjdaUkNrTjZPODZ1aGhpU1BBaGtja3RaWjhwOE9JSm5pUTl5cVFZREpvaVRjVFBBcjVWMUQ4cWFxQmNLNlE5VFFMRGVoaG5OUmtkbnNIX3MiLCJpYXQiOjE3NDc1Njk0OTl9.slYOF1h7HCmGCQ4fB8jVqVpg6DKRSWaAmnQkbKe-TkcQ65cstb6vtnpmxjoQ4KixMEJKmk74-smBU1sjcaa8WA'}, Response: {'success': False, 'message': 'Invalid Token', 'errorCode': 'AG8001', 'data': ''}
+[I 250518 17:28:56 smartConnect:121] in pool
+[I 250518 17:29:33 smartConnect:121] in pool
+[I 250518 17:46:00 smartConnect:121] in pool
+[I 250518 17:58:12 smartConnect:121] in pool
+[I 250518 18:00:01 smartConnect:121] in pool
+[I 250518 18:52:58 smartConnect:121] in pool
+[I 250518 18:54:13 smartConnect:121] in pool
+[I 250518 18:54:39 smartConnect:121] in pool
+[I 250518 18:54:50 smartConnect:121] in pool
+[I 250518 18:55:29 smartConnect:121] in pool
+[I 250518 19:03:22 smartConnect:121] in pool
+[I 250518 19:09:59 smartConnect:121] in pool
+[I 250518 19:10:17 smartConnect:121] in pool
+[I 250518 19:35:46 smartConnect:121] in pool
+[I 250518 19:41:38 smartConnect:121] in pool
+[I 250518 19:46:46 smartConnect:121] in pool

@@ -1,0 +1,8 @@
+[I 250730 15:45:10 smartConnect:124] in pool
+[E 250730 15:45:11 smartWebSocketV2:304] Error occurred during WebSocket connection: module 'websocket' has no attribute 'WebSocketApp'
+[I 250730 15:46:05 smartConnect:124] in pool
+[E 250730 15:46:06 smartWebSocketV2:304] Error occurred during WebSocket connection: module 'websocket' has no attribute 'WebSocketApp'
+[I 250730 15:47:55 smartConnect:124] in pool
+[I 250730 15:48:28 smartConnect:124] in pool
+[I 250730 15:49:15 smartConnect:124] in pool
+[E 250730 15:49:15 smartWebSocketV2:304] Error occurred during WebSocket connection: module 'websocket' has no attribute 'WebSocketApp'

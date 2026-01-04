@@ -1,0 +1,14 @@
+[I 250202 13:28:42 smartConnect:121] in pool
+[I 250202 13:38:55 smartConnect:121] in pool
+[I 250202 13:40:07 smartConnect:121] in pool
+[I 250202 13:48:41 smartConnect:121] in pool
+[I 250202 14:57:26 smartConnect:121] in pool
+[I 250202 18:36:34 smartConnect:121] in pool
+[I 250202 18:58:16 smartConnect:121] in pool
+[I 250202 18:59:05 smartConnect:121] in pool
+[I 250202 19:03:14 smartConnect:121] in pool
+[I 250202 19:04:04 smartConnect:121] in pool
+[E 250202 19:04:11 smartConnect:218] Error occurred while making a POST request to https://apiconnect.angelbroking.com/rest/auth/angelbroking/user/v1/loginByPassword. Headers: {'Content-type': 'application/json', 'X-ClientLocalIP': '127.0.0.1', 'X-ClientPublicIP': '106.193.147.98', 'X-MACAddress': 'b4:8c:9d:52:b7:da', 'Accept': 'application/json', 'X-PrivateKey': 'gVTQXkoG', 'X-UserType': 'USER', 'X-SourceID': 'WEB'}, Request: {'clientcode': 'G52021525', 'password': '3494', 'totp': '523796'}, Response: HTTPSConnectionPool(host='apiconnect.angelbroking.com', port=443): Max retries exceeded with url: /rest/auth/angelbroking/user/v1/loginByPassword (Caused by ConnectTimeoutError(<urllib3.connection.HTTPSConnection object at 0x0000027D13222F30>, 'Connection to apiconnect.angelbroking.com timed out. (connect timeout=7)'))
+[I 250202 19:04:34 smartConnect:121] in pool
+[I 250202 19:05:06 smartConnect:121] in pool
+[I 250202 19:08:00 smartConnect:121] in pool
