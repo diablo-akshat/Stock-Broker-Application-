@@ -1,138 +1,115 @@
-from SmartApi import SmartConnect
-from smartWebSocketV2 import SmartWebSocketV2
-from config import apikey, username, pwd, token
-import pyotp
-import json
-import http.client
+import sys
 import pandas as pd
 from datetime import datetime, timedelta
-from logzero import logger
+from auth import login_and_setup
+from symbol_lookup import lookup_symbol
+from market_status import check_market_status
+from live_data import handle_live_data
+from config import apikey, username
 
+def display_menu():
+    print("\n" + "=" * 35)
+    print("      Angel One Stock Market Tool")
+    print("=" * 35)
+    print("1. Live Streaming (Real-Time)")
+    print("2. Refresh Every Minute")
+    print("3. Historical OHLC Data")
+    print("4. Exit")
+    print("=" * 35)
 
-conn = http.client.HTTPSConnection("apiconnect.angelone.in")
-
-symboltoken = int(input("Enter Symbol Token: "))
-
-todate = datetime.now()
-fromdate = todate - timedelta(days=30)
-
-
-obj = SmartConnect(api_key=apikey)
-data = obj.generateSession(username, pwd, pyotp.TOTP(token).now())
-AUTH_TOKEN = data['data']['jwtToken']
-refreshToken = data['data']['refreshToken']
-FEED_TOKEN = obj.getfeedToken()
-res = obj.getProfile(refreshToken)
-
-# WebSocket setup
-correlation_id = "abc123"
-action = 1
-mode = 1
-
-token_list = [{"exchangeType": 1, "tokens":' [f"{symboltoken}"]'}]
-
-sws = SmartWebSocketV2(AUTH_TOKEN, apikey, username, FEED_TOKEN)
-
-def on_data(wsapp, message):
+def main():
+    print("Initializing system and logging in...")
     try:
-        last_traded_price = message.get('last_traded_price', 'N/A')
-        logger.info(f"LTP: {last_traded_price}")
+        smartApi = login_and_setup()
     except Exception as e:
-        logger.error(f"Error processing message: {e}")
+        print(f"\nCRITICAL: Authentication failed: {e}")
+        print("Please check your credentials in config.py and ensure your TOTP secret is correct.")
+        sys.exit(1)
 
-def on_open(wsapp):
-    logger.info("WebSocket Opened")
-    sws.subscribe(correlation_id, mode, token_list)
+    while True:
+        display_menu()
+        choice = input("Enter your choice (1-4): ").strip()
 
-def on_error(wsapp, error):
-    logger.error(f"WebSocket Error: {error}")
+        if choice == "4":
+            print("\nThank you for using Angel One Stock Market Tool. Goodbye!")
+            sys.exit(0)
+            
+        if choice not in ["1", "2", "3"]:
+            print("Invalid choice. Please enter a number between 1 and 4.")
+            continue
 
-def on_close(wsapp):
-    logger.info("WebSocket Closed")
+        # Stock Lookup Stage
+        stock_query = input("\nEnter stock name (e.g. HDFCBANK, RELIANCE): ").strip()
+        if not stock_query:
+            print("Stock name cannot be empty.")
+            continue
 
+        print(f"Searching symbol master for '{stock_query}'...")
+        resolved_stock = lookup_symbol(smartApi, stock_query)
+        
+        if resolved_stock is None:
+            print("Stock resolution failed. Returning to menu.")
+            continue
 
-api_key = 'gVTQXkoG'
-username = 'G52021525'
-pwd = '3494'
-smartApi = SmartConnect(api_key)
+        symboltoken = resolved_stock["symboltoken"]
+        tradingsymbol = resolved_stock["tradingsymbol"]
+        print(f"Resolved stock: {tradingsymbol} (Token: {symboltoken})")
 
-try:
-    totp = pyotp.TOTP(token).now()
-except Exception as e:
-    logger.error("Invalid Token.")
-    raise e
+        # Action Stage
+        if choice in ["1", "2"]:
+            # Live Market Mode (Real-Time vs Polling)
+            is_open, status_msg = check_market_status()
+            
+            # Extract tokens required by WebSocket (Real-Time Mode)
+            access_token = smartApi.access_token
+            bearer_token = f"Bearer {access_token}" if not access_token.startswith("Bearer ") else access_token
+            feed_token = smartApi.getfeedToken()
+            
+            mode_param = "REALTIME" if choice == "1" else "POLLING"
+            
+            handle_live_data(
+                smartApi=smartApi,
+                auth_token=bearer_token,
+                api_key=apikey,
+                username=username,
+                feed_token=feed_token,
+                symboltoken=symboltoken,
+                tradingsymbol=tradingsymbol,
+                is_open=is_open,
+                status_msg=status_msg,
+                mode=mode_param
+            )
+        elif choice == "3":
+            # Historical OHLC Mode - Last 30 calendar days
+            try:
+                todate = datetime.now()
+                fromdate = todate - timedelta(days=30)
+                
+                historicDataParams = {
+                    "exchange": "NSE",
+                    "symboltoken": symboltoken,
+                    "interval": "ONE_DAY",
+                    "fromdate": fromdate.strftime("%Y-%m-%d %H:%M"),
+                    "todate": todate.strftime("%Y-%m-%d %H:%M")
+                }
+                print(f"\n--- Fetching last 30 calendar days OHLC (params: {historicDataParams}) ---")
+                response = smartApi.getCandleData(historicDataParams)
+                
+                if response.get("status") and "data" in response and response["data"] is not None:
+                    candle_data = response["data"]
+                    df = pd.DataFrame(candle_data, columns=["Timestamp", "Open", "High", "Low", "Close", "Volume"])
+                    # Format timestamp strings to show dates cleanly (e.g. YYYY-MM-DD)
+                    df['Timestamp'] = df['Timestamp'].apply(lambda x: x.split('T')[0] if 'T' in str(x) else str(x))
+                    df = df.iloc[::-1].reset_index(drop=True)
+                    print(df)
+                else:
+                    print(f"Error fetching historical data: {response.get('message', 'Unknown Historical Data Error')} (Code: {response.get('errorCode', 'None')})")
+            except Exception as e:
+                print(f"Exception during historical data fetching: {e}")
 
-data = smartApi.generateSession(username, pwd, totp)
-
-if data['status']:
-    authToken = data['data']['jwtToken']
-    refreshToken = data['data']['refreshToken']
-    feedToken = smartApi.getfeedToken()
-    res = smartApi.getProfile(refreshToken)
-    smartApi.generateToken(refreshToken)
-    res = res['data']['exchanges']
-else:
-    print("Error in generating session")
-
-# HTTP headers
-headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-UserType': 'USER',
-    'X-SourceID': 'WEB',
-    'Authorization': f'{authToken}',
-    'X-ClientLocalIP': '192.168.1.13',
-    'X-ClientPublicIP': '223.185.133.146',
-    'X-MACAddress': 'B6-8C-9D-52-B7-AB',
-    'X-PrivateKey': f'{apikey}',
-}
-
-# LTP
-payload = json.dumps({
-    "mode": "OHLC","exchangeTokens": 
-    {"NSE": [f"{symboltoken}"]}
-}).encode("utf-8")
-
-conn.request("POST", "/rest/secure/angelbroking/market/v1/quote/", payload, headers)
-res = conn.getresponse()
-data = res.read()
-
-try:
-    response_dict = json.loads(data.decode("utf-8"))
-    if response_dict["status"]:
-        fetched_data = response_dict["data"]["fetched"][0]
-        print(f"{fetched_data['tradingSymbol']}")
-        print(f"LTP: {fetched_data['ltp']}")
-    else:
-        print("API returned an error.")
-except json.JSONDecodeError:
-    print("Failed to decode JSON.")
-
-# OHLC
-payloadH = json.dumps({
-    "exchange": "NSE",
-    "symboltoken": f"{symboltoken}",
-    "interval": "ONE_DAY",
-    "fromdate": fromdate.strftime("%Y-%m-%d %H:%M"),
-    "todate": todate.strftime("%Y-%m-%d %H:%M")
-}).encode("utf-8")
-
-conn.request("POST", "/rest/secure/angelbroking/historical/v1/getCandleData", payloadH, headers)
-res = conn.getresponse()
-data = res.read()
-
-response = json.loads(data.decode("utf-8"))
-if response.get("status") and "data" in response:
-    candle_data = response["data"]
-    df = pd.DataFrame(candle_data, columns=["Timestamp", "Open", "High", "Low", "Close", "Volume"])
-    df = df.iloc[::-1].reset_index(drop=True)
-    print(df)
-else:
-    print("Error fetching historical data.")
-
-# WebSocket connection
-sws.on_open = on_open
-sws.on_data = on_data
-sws.on_error = on_error
-sws.on_close = on_close
-sws.connect()
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nApplication interrupted by user. Exiting cleanly.")
+        sys.exit(0)

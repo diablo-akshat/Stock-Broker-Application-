@@ -1,0 +1,13 @@
+config.py
+.env
+
+Broker/
+.venv/
+venv/
+
+__pycache__/
+*.pyc
+
+logs/
+
+.vscode/
